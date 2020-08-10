@@ -1,15 +1,18 @@
 import React from 'react'
-
-function ItemContainer() {
+import {connect} from 'react-redux'
+import { buyCake, buyIceCream } from '../redux'
+function ItemContainer(props) {
     return (
         <div>
-            <h2>Item - {itemState}</h2>
+            <h2>Item - {props.item}</h2>
+            <button onClick={props.buyItem}>Buy items</button>
         </div>
     )
 }
 
 
 const mapStateToProps = (state, ownProps) => {
+    console.log(state, ownProps)
     const itemState = ownProps.cake
         ? state.cake.numOfCakes
         : state.iceCream.numOfIceCreams
@@ -18,4 +21,17 @@ const mapStateToProps = (state, ownProps) => {
         item: itemState
     }
 }
-export default ItemContainer
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    const dispatchFunction = ownProps.cake
+        ? () => dispatch(buyCake())
+        : () => dispatch(buyIceCream())
+
+    return {
+        buyItem: dispatchFunction
+    }
+}
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ItemContainer)
